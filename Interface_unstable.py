@@ -1,8 +1,4 @@
-from tkinter import *
-import subprocess as sp
-from PIL import Image, ImageTk
-from tkinter.filedialog import askopenfilename
-import tkinter.messagebox
+
 import numpy as np
 import subprocess as sp
 from xlwt import Workbook
