@@ -97,7 +97,8 @@ def choosevid():
     ymax = coord[1][0]
 
     bouton_selec.pack_forget()
-    image = image[xmin:xmax,ymin:ymax]        
+    image = image[xmin:xmax,ymin:ymax] 
+    print(image)       
     img = Image.fromarray(image)
     img = ImageTk.PhotoImage(img)
     
@@ -156,7 +157,7 @@ def choosevid():
     bouton_traitement.pack()
 
 
-def Traitement(duree = 10, facteur = 10):
+def Traitement(duree = 60, facteur = 10):
     duree_traitement_video = datetime.datetime.now()
     command = ['ffmpeg.exe', '-i', name, '-f', 'image2pipe', '-pix_fmt','rgb24','-vcodec','rawvideo','-']
     vid = sp.Popen(command, stdout = sp.PIPE, bufsize=10**8)
@@ -177,7 +178,9 @@ def Traitement(duree = 10, facteur = 10):
     xabs1 = [mn09,mn1,mn15,mn2,mn3,mn4,mn5,mn6]
     yord1=[0.9,1,1.5,2,3,4,5,6]
     Mod = interpolate.interp1d(xabs1, yord1, fill_value='extrapolate')
-    
+    # Add taux d'erreur et vitesse myenne
+    # Supp elements seuillage
+    # Finir durée
     X = []
     Y = []
     

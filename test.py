@@ -21,13 +21,31 @@ import cv2
 import time
 #import Image
  
-
+#myFrameNumber=Int
 cap = cv2.VideoCapture("2ms.mp4")
 totalFrames = cap.get(cv2.CAP_PROP_FRAME_COUNT)
-x = 500 # largeur
+x = 1000 # largeur
 y = 500 # hauteur
 
+global myFrameNumber
+
 global value1
+
+def Defile():
+    myFrameNumber= int
+    ret, frame = cap.read()
+    #cv2.imshow("2ms.mp4", frame)
+    img = Image.fromarray(frame)
+    img = ImageTk.PhotoImage(img)
+    #img =  img.ImageTk.resize(x,y)
+    #img_panel = Label(root_panel)
+    #img_panel.configure(image=img_tk)
+    canvas_img.create_image(0, 0, anchor=NW, image=img)
+    canvas_img.pack()
+    myFrameNumber = myFrameNumber + 1
+    #time.sleep(0.5)
+    #fenetre.update
+    return myFrameNumber
 
 def FirstCoord():
     scale1.pack_forget()
@@ -71,7 +89,7 @@ value1 = IntVar()
 scale1 = Scale(fenetre, variable=value1,from_=0, to=totalFrames, orient=HORIZONTAL, length=400)
 scale1.pack()
 
-bouton = Button(fenetre, text = "Refresh",command = "")
+bouton = Button(fenetre, text = "Refresh",command = Defile)
 bouton.pack()
 
 bouton_debut = Button(fenetre, text = "Debut",command = FirstCoord)
@@ -81,16 +99,36 @@ bouton_debut.pack()
 
 #while(1):
 #    print(value1.get())
-if float(value1.get()) >= 0 and float(value1.get()) <= totalFrames:
-# set frame position
-    cap.set(cv2.CAP_PROP_POS_FRAMES,40)
-    ret, frame = cap.read()
-    img = Image.fromarray(frame)
-    img = ImageTk.PhotoImage(img)
-    fenetre.update
-    canvas_img.create_image(0, 0, anchor=NW, image=img)
-    canvas_img.pack()
-    #time.sleep(0.5)
+#if float(value1.get()) >= 0 and float(value1.get()) <= totalFrames:
+## set frame position
+#    cap.set(cv2.CAP_PROP_POS_FRAMES,40)
+#    ret, frame = cap.read()
+#    print(frame)
+#    img = Image.fromarray(frame)
+#    img = ImageTk.PhotoImage(img)
+#    fenetre.update
+#    canvas_img.create_image(0, 0, anchor=NW, image=img)
+#    canvas_img.pack()
+#    #time.sleep(0.5)
+
+
+
+#if myFrameNumber >= 0 & myFrameNumber <= totalFrames:
+#    # set frame position
+#    cap.set(cv2.CAP_PROP_POS_FRAMES,myFrameNumber)
+#
+#while True:
+#    ret, frame = cap.read()
+#    canvas_img.create_image(0, 0, anchor=NW, image=frame)
+#    canvas_img.pack()
+#    fenetre.update
+#    time.sleep(0.5)
+
+
+
+
+
+
 
 
     #img=numpy.array(frame)
