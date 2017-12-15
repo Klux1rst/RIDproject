@@ -15,19 +15,47 @@ from scipy import interpolate
 from scipy.interpolate import interp1d
 from tkinter.messagebox import showinfo
 #from fonction import PourcExe, TempsExe
+#def Buttondown():
+#    global xmin,down
+#    xmin += 50
+##    canvas_img = Canvas(Frame1, width=ymax-ymin, height=xmax-xmin, bg='ivory')
+##    canvas_img.create_image(0, 0, anchor=NW, image=img)
+##    canvas_img.update_idletasks() 
+#    down = 1
+#    
+#def Buttonup():
+#    global xmax, canvas_img, Frame1
+#    canvas_img = Canvas(Frame1, width=ymax-ymin, height=xmax-xmin, bg='ivory')
+#    canvas_img.create_image(0, 0, anchor=NW, image=img)
+#    xmax -= 50
+#    canvas_img.update_idletasks() 
+#
+#def Buttonleft():
+#    global ymax,canvas_img, Frame1
+#    canvas_img = Canvas(Frame1, width=ymax-ymin, height=xmax-xmin, bg='ivory')
+#    ymax -= 50
+#    canvas_img.update_idletasks() 
+#
+#def Buttonright():
+#    global ymin,canvas_img, Frame1
+#    canvas_img = Canvas(Frame1, width=ymax-ymin, height=xmax-xmin, bg='ivory')
+#    canvas_img.create_image(0, 0, anchor=NW, image=img)
+#    ymin += 50
 
-def Buttondown():
-    global xmin
-    xmin += 50
-def Buttonup():
-    global xmax
-    xmax -= 50
-def Buttonleft():
-    global ymax
-    ymax -= 50
-def Buttonright():
-    global ymin
-    ymin += 50
+def boutongomme():
+    global Frame1
+    class CoordinateStore:
+        def __init__(self):
+            self.points = []
+    
+        def select_point(self,event,x,y,flags,param):
+                if event == cv2.EVENT_LBUTTONDBLCLK:
+                    cv2.circle(Frame1,(x,y),3,(255,0,0),-1)
+                    self.points.append((x,y))
+    coordinateStore1 = CoordinateStore()    
+    cv2.setMouseCallback("Frame1",coordinateStore1.select_point)
+    print(coordinateStore1)
+
 
 def PourcExe(nbexe, duree):
     p=float(nbexe)/float(duree)*100
@@ -51,14 +79,14 @@ def TempsExe(temps, duree):
     print('Il reste ',time, ' de temps de traitement')
     return time 
 
-TempsExe 
-
-def choosevid():    
+def choosevid(): 
+    global chemin
     chemin = askopenfilename()
+    print(chemin)
     cheminsplit = chemin.split('/')
     global name
     name = cheminsplit.pop(len(cheminsplit)-1)
-    command = ['ffmpeg.exe', '-i', name, '-f', 'image2pipe', '-pix_fmt','rgb24','-vcodec','rawvideo','-']
+    command = ['ffmpeg.exe', '-i', chemin, '-f', 'image2pipe', '-pix_fmt','rgb24','-vcodec','rawvideo','-']
     vid = sp.Popen(command, stdout = sp.PIPE, bufsize=10**8)
     image = vid.stdout.read(1080*1920*3) # Extraction de l'ensemble des données d'une image
     image = np.fromstring(image, dtype='uint8') # Normalisation des données en int 8 bits
@@ -79,6 +107,7 @@ def choosevid():
     coordinateStore1 = CoordinateStore()    
     cv2.namedWindow('image')
     cv2.setMouseCallback('image',coordinateStore1.select_point)
+    image=cv2.resize(image,None,fx=0.5, fy=0.5, interpolation = cv2.INTER_CUBIC)
     
     while(1):
         cv2.imshow('image',image)
@@ -98,17 +127,17 @@ def choosevid():
 
     bouton_selec.pack_forget()
     image = image[xmin:xmax,ymin:ymax] 
-    print(image)       
     img = Image.fromarray(image)
     img = ImageTk.PhotoImage(img)
     
-    global canvas_img
+    global canvas_img, Frame1
     global canvas_pourc
     global canvas_temps
     global canvas_vit
     global text_vit
     global text_pourc
     global text_temps
+    
     
     Frame1 = Frame(fenetre, borderwidth=2, relief=GROOVE)
     Frame1.pack(side="top", padx=5, pady=5)
@@ -141,17 +170,17 @@ def choosevid():
     Frame2 = Frame(fenetre, borderwidth=2, relief=GROOVE)
     Frame2.pack(side="bottom", padx=1, pady=1)
 #    canvas.pack(side="left", fill="both", expand=True)
-    bouton_left = Button(Frame2, text = "←" ,command = Buttonleft, background = "#C8C8C8",font=("Purisa", 12, "bold"))
-    bouton_left.pack(side="left", fill="both", expand=True)
+    bouton_gomme1 = Button(Frame2, text = "Gomme" ,command = boutongomme, background = "#C8C8C8",font=("Purisa", 12, "bold"))
+    bouton_gomme1.pack(side="left", fill="both", expand=True)
 
-    bouton_right = Button(Frame2, text = "→" ,command = Buttonright, background = "#C8C8C8",font=("Purisa", 12, "bold"))
-    bouton_right.pack(side="left", fill="both", expand=True)
-
-    bouton_top = Button(Frame2, text = "↑" ,command = Buttonup, background = "#C8C8C8",font=("Purisa", 12, "bold"))
-    bouton_top.pack(side="left", fill="both", expand=True)
-
-    bouton_bottom = Button(Frame2, text = "↓" ,command = Buttondown, background = "#C8C8C8", font=("Purisa", 12, "bold"))
-    bouton_bottom.pack(side="left", fill="both", expand=True)
+#    bouton_right = Button(Frame2, text = "→" ,command = Buttonright, background = "#C8C8C8",font=("Purisa", 12, "bold"))
+#    bouton_right.pack(side="left", fill="both", expand=True)
+#
+#    bouton_top = Button(Frame2, text = "↑" ,command = Buttonup, background = "#C8C8C8",font=("Purisa", 12, "bold"))
+#    bouton_top.pack(side="left", fill="both", expand=True)
+#
+#    bouton_bottom = Button(Frame2, text = "↓" ,command = Buttondown, background = "#C8C8C8", font=("Purisa", 12, "bold"))
+#    bouton_bottom.pack(side="left", fill="both", expand=True)
     
     bouton_traitement = Button(Frame2, text = "Commencer traitement",command = Traitement)
     bouton_traitement.pack()
@@ -159,7 +188,7 @@ def choosevid():
 
 def Traitement(duree = 60, facteur = 10):
     duree_traitement_video = datetime.datetime.now()
-    command = ['ffmpeg.exe', '-i', name, '-f', 'image2pipe', '-pix_fmt','rgb24','-vcodec','rawvideo','-']
+    command = ['ffmpeg.exe', '-i', chemin, '-f', 'image2pipe', '-pix_fmt','rgb24','-vcodec','rawvideo','-']
     vid = sp.Popen(command, stdout = sp.PIPE, bufsize=10**8)
     Namefile = str(name)+'.xls'
     book = Workbook()
@@ -232,7 +261,6 @@ def Traitement(duree = 60, facteur = 10):
         TempsExe((datetime.datetime.now()-duree_traitement_par_sec).total_seconds(), duree)
         canvas_pourc.itemconfigure(text_pourc, text=pourc) 
         canvas_temps.itemconfigure(text_temps, text=time) 
-#        fenetre.update
         
         regression_moy_sec = -sum(Y)/len(Y)
         if regression_moy_sec<-2.7865:
